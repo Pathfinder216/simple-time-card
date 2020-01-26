@@ -11,4 +11,8 @@ if __name__ == "__main__":
     engine = QQmlApplicationEngine()
     engine.load("main.qml")
 
+    # QML failed to load, so exit to prevent the app from hanging
+    if not engine.rootObjects():
+        sys.exit(1)
+
     sys.exit(app.exec_())
