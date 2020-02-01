@@ -12,11 +12,21 @@ ApplicationWindow {
         anchors.fill: parent
 
         Text {
+            function formatTime(totalMinutes) {
+                const hours = Math.floor(totalMinutes / 60)
+                const minutes = totalMinutes % 60
+                return hours + ":" + pad(minutes)
+            }
+
+            function pad(number) {
+                return (number < 10) ? "0" + number : number
+            }
+
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredHeight: 1
 
-            text: "3:18"
+            text: formatTime(minuteTimer.totalMinutes)
             fontSizeMode: Text.Fit
             font.pointSize: 128
             minimumPointSize: 8
@@ -42,6 +52,9 @@ ApplicationWindow {
                     Layout.preferredHeight: 1
 
                     text: qsTr("Clock in")
+                    enabled: !minuteTimer.running
+
+                    onClicked: minuteTimer.start()
                 }
 
                 Button {
@@ -50,6 +63,9 @@ ApplicationWindow {
                     Layout.preferredHeight: 1
 
                     text: qsTr("Clock out")
+                    enabled: minuteTimer.running
+
+                    onClicked: minuteTimer.stop()
                 }
 
                 Text {
@@ -64,6 +80,26 @@ ApplicationWindow {
                     horizontalAlignment: Qt.AlignHCenter
                     verticalAlignment: Qt.AlignVCenter
                 }
+            }
+        }
+    }
+
+    Timer {
+        id: minuteTimer
+
+        property int totalMinutes: 0
+
+        // One minute
+        interval: 60000
+
+        repeat: true
+        triggeredOnStart: true
+
+        onTriggered: totalMinutes++
+
+        onRunningChanged: {
+            if (!running) {
+                totalMinutes = 0
             }
         }
     }
