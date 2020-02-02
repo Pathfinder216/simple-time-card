@@ -12,5 +12,11 @@ class MinuteTimer(QTimer):
         self.timeout.connect(self._tick)
 
     @pyqtSlot()
+    def start(self):
+        """ Trigger once on start """
+        self.timeout.emit()
+        super().start()
+
+    @pyqtSlot()
     def _tick(self):
         self.total_minutes += 1
