@@ -1,13 +1,13 @@
 import sys
 
+from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine
-from PyQt5.QtWidgets import QApplication
 
 import resources
 from time_card import TimeCardManager
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    app = QGuiApplication(sys.argv)
 
     time_card_manager = TimeCardManager()
 
