@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
-from minute_timer import MinuteTimer
+from .minute_timer import MinuteTimer
 
 
 class TimeCardError(Exception):
