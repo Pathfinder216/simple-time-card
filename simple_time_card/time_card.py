@@ -26,9 +26,12 @@ class TimeCardManager(QObject):
         super().__init__()
 
         self._clocked_in = False
+        self._start_time = None
 
         self._timer = MinuteTimer()
         self._timer.total_minutes_changed.connect(self.current_time_changed)
+
+        self._time_card = TimeCard()
 
     @pyqtProperty(bool, notify=clocked_in_changed)
     def clocked_in(self):
@@ -49,6 +52,8 @@ class TimeCardManager(QObject):
         self.clocked_in_changed.emit()
         self._timer.start()
 
+        self._start_time = datetime.now()
+
     @pyqtSlot(name="clockOut")
     def clock_out(self):
         if not self.clocked_in:
@@ -58,3 +63,10 @@ class TimeCardManager(QObject):
         self.clocked_in_changed.emit()
         self._timer.stop()
         self._timer.total_minutes = 0
+
+        self._add_shift_report(datetime.now())
+
+    def _add_shift_report(self, end_time):
+        report = ShiftReport(start=self._start_time, end=end_time)
+        self._time_card.shift_reports.append(report)
+        self._start_time = None
