@@ -1,6 +1,17 @@
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import List
+
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 from .minute_timer import MinuteTimer
+from .shift_report import ShiftReport
+
+
+@dataclass
+class TimeCard:
+    creation_time: datetime = field(default_factory=datetime.now)
+    shift_reports: List[ShiftReport] = field(default_factory=list)
 
 
 class TimeCardError(Exception):
