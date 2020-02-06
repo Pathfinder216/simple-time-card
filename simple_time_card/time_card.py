@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
@@ -10,7 +10,7 @@ from .shift_report import ShiftReport
 
 @dataclass
 class TimeCard:
-    creation_time: datetime = field(default_factory=datetime.now)
+    creation_time: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     shift_reports: List[ShiftReport] = field(default_factory=list)
 
 
@@ -52,7 +52,7 @@ class TimeCardManager(QObject):
         self.clocked_in_changed.emit()
         self._timer.start()
 
-        self._start_time = datetime.now()
+        self._start_time = datetime.now(timezone.utc)
 
     @pyqtSlot(name="clockOut")
     def clock_out(self):
@@ -64,7 +64,7 @@ class TimeCardManager(QObject):
         self._timer.stop()
         self._timer.total_minutes = 0
 
-        self._add_shift_report(datetime.now())
+        self._add_shift_report(datetime.now(timezone.utc))
 
     def _add_shift_report(self, end_time):
         report = ShiftReport(start=self._start_time, end=end_time)
