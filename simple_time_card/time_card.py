@@ -21,6 +21,7 @@ class TimeCardError(Exception):
 class TimeCardManager(QObject):
     clocked_in_changed = pyqtSignal()
     current_time_changed = pyqtSignal()
+    shift_report_added = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -32,6 +33,10 @@ class TimeCardManager(QObject):
         self._timer.total_minutes_changed.connect(self.current_time_changed)
 
         self._time_card = TimeCard()
+
+    @pyqtProperty(list, notify=shift_report_added)
+    def shift_reports(self):
+        return [report for report in self._time_card.shift_reports]
 
     @pyqtProperty(bool, notify=clocked_in_changed)
     def clocked_in(self):
@@ -70,3 +75,4 @@ class TimeCardManager(QObject):
         report = ShiftReport(start=self._start_time, end=end_time)
         self._time_card.shift_reports.append(report)
         self._start_time = None
+        self.shift_report_added.emit()
