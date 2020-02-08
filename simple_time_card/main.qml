@@ -30,7 +30,53 @@ ApplicationWindow {
             Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredWidth: 1
+                Layout.preferredWidth: 2
+
+                Rectangle {
+                    id: tableRectangle
+
+                    anchors { fill: parent; margins: 5 }
+
+                    border.width: 2
+
+                    TableView {
+                        anchors { fill: parent; margins: parent.border.width }
+                        clip: true
+
+                        model: timeCardManager.shift_reports
+
+                        columnWidthProvider: function (column) { return width }
+                        rowHeightProvider: function (row) { return 50 }
+
+                        delegate: RowLayout {
+                            Text {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 1
+
+                                text: modelData.date
+                                fontSizeMode: Text.Fit
+                                font.pointSize: 48
+                                minimumPointSize: 8
+                            }
+
+
+                            Text {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 1
+
+                                text: modelData.length
+                                fontSizeMode: Text.Fit
+                                font.pointSize: 48
+                                minimumPointSize: 8
+                                horizontalAlignment: Qt.AlignRight
+                            }
+                        }
+
+                        onWidthChanged: forceLayout()
+                    }
+                }
             }
 
             ColumnLayout {
