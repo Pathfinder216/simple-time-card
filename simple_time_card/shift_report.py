@@ -7,6 +7,9 @@ from PyQt5.QtQml import qmlRegisterType
 
 
 def format_timedelta(delta: timedelta):
+    if delta < timedelta():
+        raise ValueError("Cannot format negative time deltas")
+
     hours, remainder = divmod(delta.seconds, 3600)
     minutes = math.ceil(remainder / 60)
     return f"{hours}:{minutes:02d}"
