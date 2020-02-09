@@ -109,7 +109,7 @@ ApplicationWindow {
                     Layout.fillHeight: true
                     Layout.preferredHeight: 1
 
-                    text: "Total: 42:19"
+                    text: timeCardManager.formatted_total_time
                     fontSizeMode: Text.Fit
                     font.pointSize: 48
                     minimumPointSize: 8

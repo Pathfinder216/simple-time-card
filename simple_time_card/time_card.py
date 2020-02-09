@@ -1,13 +1,13 @@
 import json
 import os
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import List
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 from .minute_timer import MinuteTimer
-from .shift_report import ShiftReport
+from .shift_report import ShiftReport, format_timedelta
 
 
 class TimeCardEncoder(json.JSONEncoder):
@@ -102,6 +102,13 @@ class TimeCardManager(QObject):
         hours = self._timer.total_minutes // 60
         minutes = self._timer.total_minutes % 60
         return f"{hours}:{minutes:02d}"
+
+    @pyqtProperty(str, notify=shift_report_added)
+    def formatted_total_time(self):
+        total_time_delta = sum(
+            [report.length for report in self.shift_reports], start=timedelta()
+        )
+        return format_timedelta(total_time_delta)
 
     @pyqtSlot(name="clockIn")
     def clock_in(self):
