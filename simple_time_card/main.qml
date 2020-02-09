@@ -66,7 +66,7 @@ ApplicationWindow {
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: 1
 
-                                text: modelData.length
+                                text: modelData.formatted_length
                                 fontSizeMode: Text.Fit
                                 font.pointSize: 48
                                 minimumPointSize: 8

@@ -14,15 +14,18 @@ class ShiftReport(QObject):
     def __post_init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @property
+    def length(self):
+        return self.end - self.start
+
     @pyqtProperty(str, constant=True)
     def date(self):
         local_start = self.start.astimezone(tz=None)
         return str(local_start.date())
 
     @pyqtProperty(str, constant=True)
-    def length(self):
-        time_delta = self.end - self.start
-        hours, remainder = divmod(time_delta.seconds, 3600)
+    def formatted_length(self):
+        hours, remainder = divmod(self.length.seconds, 3600)
         minutes = math.ceil(remainder / 60)
         return f"{hours}:{minutes:02d}"
 
