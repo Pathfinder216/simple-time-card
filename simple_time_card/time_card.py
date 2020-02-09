@@ -52,6 +52,17 @@ class TimeCard:
     creation_time: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     shift_reports: List[ShiftReport] = field(default_factory=list)
 
+    @staticmethod
+    def from_file(filepath):
+        with open(filepath) as f:
+            return json.load(f, cls=TimeCardDecoder)
+
+    def to_file(self, filepath):
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+        with open(filepath, "w") as f:
+            json.dump(self, f, cls=TimeCardEncoder)
+
 
 class TimeCardError(Exception):
     pass
