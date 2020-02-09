@@ -73,6 +73,8 @@ class TimeCardManager(QObject):
     current_time_changed = pyqtSignal()
     shift_report_added = pyqtSignal()
 
+    TIME_CARD_FILEPATH = os.path.join("timecards", "timecard.json")
+
     def __init__(self):
         super().__init__()
 
@@ -82,7 +84,10 @@ class TimeCardManager(QObject):
         self._timer = MinuteTimer()
         self._timer.total_minutes_changed.connect(self.current_time_changed)
 
-        self._time_card = TimeCard()
+        try:
+            self._time_card = TimeCard.from_file(self.TIME_CARD_FILEPATH)
+        except FileNotFoundError:
+            self._time_card = TimeCard()
 
     @pyqtProperty(list, notify=shift_report_added)
     def shift_reports(self):
@@ -126,3 +131,4 @@ class TimeCardManager(QObject):
         self._time_card.shift_reports.append(report)
         self._start_time = None
         self.shift_report_added.emit()
+        self._time_card.to_file(self.TIME_CARD_FILEPATH)
