@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -22,8 +23,8 @@ class ShiftReport(QObject):
     def length(self):
         time_delta = self.end - self.start
         hours, remainder = divmod(time_delta.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        return f"{hours}:{minutes:02d}:{seconds:02d}"
+        minutes = math.ceil(remainder / 60)
+        return f"{hours}:{minutes:02d}"
 
 
 qmlRegisterType(ShiftReport)
