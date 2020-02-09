@@ -1,9 +1,15 @@
 import math
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from PyQt5.QtCore import QObject, pyqtProperty
 from PyQt5.QtQml import qmlRegisterType
+
+
+def format_timedelta(delta: timedelta):
+    hours, remainder = divmod(delta.seconds, 3600)
+    minutes = math.ceil(remainder / 60)
+    return f"{hours}:{minutes:02d}"
 
 
 @dataclass
@@ -25,9 +31,7 @@ class ShiftReport(QObject):
 
     @pyqtProperty(str, constant=True)
     def formatted_length(self):
-        hours, remainder = divmod(self.length.seconds, 3600)
-        minutes = math.ceil(remainder / 60)
-        return f"{hours}:{minutes:02d}"
+        return format_timedelta(self.length)
 
 
 qmlRegisterType(ShiftReport)
