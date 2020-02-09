@@ -1,2 +1,2 @@
 from . import resources
-from .time_card import TimeCardManager
+from .time_card_manager import TimeCardManager
