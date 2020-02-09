@@ -58,11 +58,14 @@ class TimeCardManager(QObject):
         if self.clocked_in:
             raise TimeCardManagerError("Attempted to clock in when already clocked in")
 
+        self._clock_in()
+
+    def _clock_in(self):
+        self._timer.start()
+        self._start_time = datetime.now(timezone.utc)
+
         self._clocked_in = True
         self.clocked_in_changed.emit()
-        self._timer.start()
-
-        self._start_time = datetime.now(timezone.utc)
 
     @pyqtSlot(name="clockOut")
     def clock_out(self):
@@ -71,16 +74,19 @@ class TimeCardManager(QObject):
                 "Attempted to clock out when already clocked out"
             )
 
-        self._clocked_in = False
-        self.clocked_in_changed.emit()
+        self._clock_out()
+
+    def _clock_out(self):
         self._timer.stop()
         self._timer.total_minutes = 0
 
         self._add_shift_report(datetime.now(timezone.utc))
 
+        self._clocked_in = False
+        self.clocked_in_changed.emit()
+
     def _add_shift_report(self, end_time):
         report = ShiftReport(start=self._start_time, end=end_time)
         self._time_card.shift_reports.append(report)
-        self._start_time = None
-        self.shift_report_added.emit()
         self._time_card.to_file(self.TIME_CARD_FILEPATH)
+        self.shift_report_added.emit()
