@@ -43,8 +43,7 @@ class TimeCardManager(QObject):
 
     @pyqtProperty(str, notify=current_time_changed)
     def formatted_current_time(self):
-        hours = self._timer.total_minutes // 60
-        minutes = self._timer.total_minutes % 60
+        hours, minutes = divmod(self._timer.total_minutes, 60)
         return f"{hours}:{minutes:02d}"
 
     @pyqtProperty(str, notify=shift_report_added)
