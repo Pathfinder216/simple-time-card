@@ -1,0 +1,3 @@
+[run]
+source = simple_time_card
+omit = */resources.py
