@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.8"
+
+install:
+  - pip install pipenv
+  - pipenv sync
+
+#command to run tests
+script: "python -m unittest -v"
+
+notifications:
+  email:
+    on_success: always
